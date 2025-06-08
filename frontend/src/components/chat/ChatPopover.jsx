@@ -63,7 +63,10 @@ const ChatPopover = () => {
           height: "500px",
         }}
       >
-        <div className="chat-header" style={{ padding: "15px", borderBottom: "1px solid #eee" }}>
+        <div
+          className="chat-header"
+          style={{ padding: "15px", borderBottom: "1px solid #eee" }}
+        >
           <div style={{ display: "flex", gap: "20px", margin: "0" }}>
             <button
               onClick={() => setActiveTab("chat")}
@@ -71,10 +74,11 @@ const ChatPopover = () => {
                 padding: "10px 20px",
                 border: "none",
                 background: "none",
-                borderBottom: activeTab === "chat" ? "2px solid #7565D9" : "none",
+                borderBottom:
+                  activeTab === "chat" ? "2px solid #7565D9" : "none",
                 color: activeTab === "chat" ? "#000" : "#666",
                 fontWeight: "500",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Chat
@@ -85,10 +89,11 @@ const ChatPopover = () => {
                 padding: "10px 20px",
                 border: "none",
                 background: "none",
-                borderBottom: activeTab === "participants" ? "2px solid #7565D9" : "none",
+                borderBottom:
+                  activeTab === "participants" ? "2px solid #7565D9" : "none",
                 color: activeTab === "participants" ? "#000" : "#666",
                 fontWeight: "500",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Participants
@@ -106,7 +111,7 @@ const ChatPopover = () => {
                 padding: "20px",
                 display: "flex",
                 flexDirection: "column",
-                gap: "15px"
+                gap: "15px",
               }}
             >
               {messages.map((message, index) => {
@@ -116,11 +121,17 @@ const ChatPopover = () => {
                     key={index}
                     style={{
                       alignSelf: isCurrentUser ? "flex-end" : "flex-start",
-                      maxWidth: "80%"
+                      maxWidth: "80%",
                     }}
                   >
                     {!isCurrentUser && (
-                      <div style={{ color: "#666", fontSize: "14px", marginBottom: "4px" }}>
+                      <div
+                        style={{
+                          color: "#666",
+                          fontSize: "14px",
+                          marginBottom: "4px",
+                        }}
+                      >
                         {message.sender}
                       </div>
                     )}
@@ -130,7 +141,7 @@ const ChatPopover = () => {
                         color: isCurrentUser ? "white" : "black",
                         padding: "12px 16px",
                         borderRadius: "18px",
-                        wordBreak: "break-word"
+                        wordBreak: "break-word",
                       }}
                     >
                       {message.text}
@@ -145,7 +156,7 @@ const ChatPopover = () => {
                 padding: "15px",
                 borderTop: "1px solid #eee",
                 display: "flex",
-                gap: "10px"
+                gap: "10px",
               }}
             >
               <input
@@ -158,7 +169,7 @@ const ChatPopover = () => {
                   padding: "12px",
                   border: "1px solid #ddd",
                   borderRadius: "8px",
-                  outline: "none"
+                  outline: "none",
                 }}
               />
               <button
@@ -169,7 +180,7 @@ const ChatPopover = () => {
                   color: "white",
                   border: "none",
                   borderRadius: "8px",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 Send
@@ -177,40 +188,56 @@ const ChatPopover = () => {
             </form>
           </>
         ) : (
-          <div className="participants-list" style={{ flex: 1, overflowY: "auto" }}>
+          <div
+            className="participants-list"
+            style={{ flex: 1, overflowY: "auto" }}
+          >
             <div style={{ padding: "15px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", color: "#666", padding: "10px 15px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  color: "#666",
+                  padding: "10px 15px",
+                }}
+              >
                 <span>Name</span>
                 {isTeacher && <span>Action</span>}
               </div>
-              {participants.map((participant, index) => (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "15px",
-                    borderBottom: "1px solid #eee"
-                  }}
-                >
-                  <span style={{ fontWeight: "500" }}>{participant}</span>
-                  {isTeacher && !participant.startsWith("teacher") && (
-                    <button
-                      onClick={() => handleKickOut(participant)}
-                      style={{
-                        color: "#7565D9",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        textDecoration: "underline"
-                      }}
-                    >
-                      Kick out
-                    </button>
-                  )}
-                </div>
-              ))}
+              {participants
+                .filter(
+                  (participant) =>
+                    !participant.startsWith("teacher") ||
+                    participant === username
+                )
+                .map((participant, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "15px",
+                      borderBottom: "1px solid #eee",
+                    }}
+                  >
+                    <span style={{ fontWeight: "500" }}>{participant}</span>
+                    {isTeacher && !participant.startsWith("teacher") && (
+                      <button
+                        onClick={() => handleKickOut(participant)}
+                        style={{
+                          color: "#7565D9",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        Kick out
+                      </button>
+                    )}
+                  </div>
+                ))}
             </div>
           </div>
         )}
@@ -232,13 +259,20 @@ const ChatPopover = () => {
           alignItems: "center",
           justifyContent: "center",
           boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-          zIndex: 1000
+          zIndex: 1000,
         }}
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-             xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"
-                fill="white"/>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"
+            fill="white"
+          />
         </svg>
       </button>
     </>
