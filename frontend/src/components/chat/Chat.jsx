@@ -26,7 +26,9 @@ const Chat = ({ messages, newMessage, onMessageChange, onSendMessage }) => {
         className="flex-1 overflow-y-auto flex flex-col mb-2"
       >
         {messages.length === 0 ? (
-          <div className="text-gray-400 text-ledt text-sm ml-[17px] mt-[8px]">No messages yet</div>
+          <div className="text-gray-400 text-left text-sm ml-[17px] mt-[8px]">
+            No messages yet
+          </div>
         ) : (
           messages.map((msg, index) => {
             const isCurrentUser = msg.user === username;
@@ -50,7 +52,10 @@ const Chat = ({ messages, newMessage, onMessageChange, onSendMessage }) => {
       </div>
       <form
         className="flex items-center gap-2 mt-2 fixed bottom-3"
-        onSubmit={e => { e.preventDefault(); onSendMessage(); }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSendMessage();
+        }}
       >
         <Form.Control
           type="text"
