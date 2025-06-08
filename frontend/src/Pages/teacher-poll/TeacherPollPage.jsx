@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import eyeIcon from "../../assets/eye.svg";
 let apiUrl =
   import.meta.env.VITE_NODE_ENV === "production"
-    ? "https://polling-application-nopu.onrender.com"
-    : "https://polling-application-nopu.onrender.com";
+    ? "https://polling-application-5lt2.onrender.com"
+    : "https://polling-application-5lt2.onrender.com";
 const socket = io(apiUrl);
 
 const TeacherPollPage = () => {
