@@ -4,15 +4,24 @@ import socket from "../../utils/socket.js";
 import "./StudentPollPage.css";
 import stopwatch from "../../assets/stopwatch.svg";
 import ChatPopover from "../../components/chat/ChatPopover";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import stars from "../../assets/spark.svg";
 
 const StudentPollPage = () => {
-  const { roomCode } = useParams();
   const [votes, setVotes] = useState({});
   const [selectedOption, setSelectedOption] = useState(null);
   const [submitted, setSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const storedEndTime = localStorage.getItem("pollEndTime");
+    if (storedEndTime) {
+      const remainingTime = Math.max(
+        0,
+        Math.floor((parseInt(storedEndTime) - Date.now()) / 1000)
+      );
+      return remainingTime;
+    }
+    return 0;
+  });
   const [pollQuestion, setPollQuestion] = useState("");
   const [pollOptions, setPollOptions] = useState([]);
   const [pollId, setPollId] = useState("");
@@ -28,105 +37,97 @@ const StudentPollPage = () => {
 
   const handleSubmit = () => {
     if (selectedOption) {
-      socket.emit("submitVote", {
-        pollId,
-        option: selectedOption,
-        roomCode,
-      });
-      setSubmitted(true);
-      localStorage.removeItem("pollEndTime");
+      const username = sessionStorage.getItem("username");
+      if (username) {
+        socket.emit("submitAnswer", {
+          username: username,
+          option: selectedOption,
+          pollId: pollId,
+        });
+        setSubmitted(true);
+      } else {
+        console.error("No username found in session storage!");
+      }
     }
   };
 
   useEffect(() => {
-    socket.connect();
-
-    socket.on("connect", () => {
-      socket.emit("joinRoom", roomCode);
-      localStorage.removeItem("pollEndTime");
-      setPollQuestion("");
-      setPollOptions([]);
-      setVotes({});
-      setSubmitted(false);
-      setSelectedOption(null);
-      setTimeLeft(0);
-    });
-
-    socket.on("kickedOut", () => {
+    const handleKickedOut = () => {
+      console.log("Received kickout event");
       setKickedOut(true);
       sessionStorage.removeItem("username");
       socket.disconnect();
       navigate("/kicked-out");
-    });
+    };
 
+    socket.on("kickedOut", handleKickedOut);
+
+    return () => {
+      socket.off("kickedOut", handleKickedOut);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [navigate]);
+
+  useEffect(() => {
     socket.on("pollCreated", (pollData) => {
       setPollQuestion(pollData.question);
       setPollOptions(pollData.options);
       setVotes({});
       setSubmitted(false);
       setSelectedOption(null);
-      setPollId(pollData._id);
+      const endTime = Date.now() + pollData.timer * 1000;
+      localStorage.setItem("pollEndTime", endTime.toString());
       setTimeLeft(pollData.timer);
-
-      if (pollData.timer > 0) {
-        const endTime = Date.now() + pollData.timer * 1000;
-        localStorage.setItem("pollEndTime", endTime.toString());
-      } else {
-        localStorage.removeItem("pollEndTime");
-        setSubmitted(true);
-      }
+      setPollId(pollData._id);
     });
 
     socket.on("pollResults", (updatedVotes) => {
       setVotes(updatedVotes);
     });
 
-    socket.on("timerUpdate", (newTime) => {
-      setTimeLeft(newTime);
-      if (newTime <= 0) {
-        localStorage.removeItem("pollEndTime");
-        setSubmitted(true);
-      }
-    });
-
-    const storedEndTime = localStorage.getItem("pollEndTime");
-    if (storedEndTime) {
-      const parsedEndTime = Number.parseInt(storedEndTime, 10);
-      if (parsedEndTime > Date.now()) {
-        setTimeLeft(Math.ceil((parsedEndTime - Date.now()) / 1000));
-      } else {
-        localStorage.removeItem("pollEndTime");
-        setSubmitted(true);
-        setTimeLeft(0);
-      }
-    }
-
     return () => {
-      socket.disconnect();
+      socket.off("pollCreated");
+      socket.off("pollResults");
     };
-  }, [roomCode, navigate]);
+  }, []);
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      if (timerRef.current) clearInterval(timerRef.current);
+    if (timeLeft > 0 && !submitted) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+
       timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => {
-          const updated = prev - 1;
-          if (updated <= 0) {
+        const storedEndTime = localStorage.getItem("pollEndTime");
+        if (storedEndTime) {
+          const remainingTime = Math.max(
+            0,
+            Math.floor((parseInt(storedEndTime) - Date.now()) / 1000)
+          );
+
+          if (remainingTime <= 0) {
             clearInterval(timerRef.current);
             localStorage.removeItem("pollEndTime");
+            setTimeLeft(0);
             setSubmitted(true);
-            return 0;
+          } else {
+            setTimeLeft(remainingTime);
           }
-          return updated;
-        });
+        } else {
+          clearInterval(timerRef.current);
+          setTimeLeft(0);
+        }
       }, 1000);
     }
 
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
     };
-  }, [timeLeft]);
+  }, [timeLeft, submitted]);
 
   const calculatePercentage = (count) => {
     if (totalVotes === 0) return 0;
@@ -153,10 +154,7 @@ const StudentPollPage = () => {
                     Intervue Poll
                   </div>
                 </div>
-                <div
-                  className="spinner-border text-center spinner mt-[13px] mb-[35px]"
-                  role="status"
-                >
+                <div className="spinner-border text-center spinner mt-[13px] mb-[35px]" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
                 <h3 className="font-[500] text-[33px] text-center">
@@ -165,12 +163,13 @@ const StudentPollPage = () => {
               </div>
             </div>
           )}
+
           {pollQuestion !== "" && (
             <div className="mx-auto w-[727px] py-[100px]">
               <div className="flex items-center gap-[40px] mb-[17px]">
                 <h2 className="text-[22px] font-[600] mt-[6px]">Question</h2>
                 <div className="flex items-center gap-2 justify-center">
-                  <img src={stopwatch} width="15px" alt="Stopwatch" />
+                  <img src={stopwatch} width="15px" height="auto" alt="Stopwatch" />
                   <span className="text-[16px] font-[500] text-[#FF4B4B]">
                     {`00:${String(timeLeft).padStart(2, "0")}`}
                   </span>
@@ -186,11 +185,9 @@ const StudentPollPage = () => {
                   {pollOptions.map((option, index) => {
                     const percentage = calculatePercentage(votes[option.text] || 0);
                     const isSelected = !submitted && selectedOption === option.text;
+
                     return (
-                      <div
-                        key={option.id}
-                        className="option-item mb-3 px-[18px]"
-                      >
+                      <div key={option.id} className="option-item mb-3 px-[18px]">
                         <div
                           className={`relative rounded-[6px] overflow-hidden ${
                             isSelected
@@ -198,8 +195,7 @@ const StudentPollPage = () => {
                               : "border border-[#8F64E1]"
                           }`}
                           style={{
-                            cursor:
-                              submitted || timeLeft === 0 ? "not-allowed" : "pointer",
+                            cursor: submitted || timeLeft === 0 ? "not-allowed" : "pointer",
                             boxShadow: isSelected ? "0 0 0 2px #8F64E1" : "none",
                           }}
                           onClick={() => {
@@ -230,8 +226,7 @@ const StudentPollPage = () => {
                             <span
                               className="text-[16px] font-[500]"
                               style={{
-                                color:
-                                  submitted && percentage > 10 ? "#fff" : "#000",
+                                color: submitted && percentage > 10 ? "#fff" : "#000",
                               }}
                             >
                               {option.text}

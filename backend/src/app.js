@@ -22,7 +22,7 @@ const DB =
     ? process.env.MONGODB_URL
     : process.env.MONGODB_URL;
 
-mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -38,12 +38,12 @@ mongoose
     process.exit(1);
   });
 
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err);
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
 });
 
-mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected. Attempting to reconnect...');
+mongoose.connection.on("disconnected", () => {
+  console.log("MongoDB disconnected. Attempting to reconnect...");
 });
 
 const server = http.createServer(app);
@@ -58,48 +58,19 @@ const io = new Server(server, {
 let votes = {};
 let connectedUsers = {};
 let currentPoll = null;
-let pollStartTime = null;
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
   if (currentPoll) {
-    // Calculate remaining time
-    const elapsedTime = Math.floor((Date.now() - pollStartTime) / 1000);
-    const remainingTime = Math.max(0, currentPoll.timer - elapsedTime);
-    
-    // Only send current poll if timer hasn't expired
-    if (remainingTime > 0) {
-      socket.emit("pollCreated", {
-        ...currentPoll.toObject(),
-        timer: remainingTime
-      });
-    } else {
-      currentPoll = null;
-      pollStartTime = null;
-    }
+    socket.emit("pollCreated", currentPoll);
   }
 
   socket.on("createPoll", async (pollData) => {
     votes = {};
     const poll = await createPoll(pollData);
     currentPoll = poll;
-    pollStartTime = Date.now();
     io.emit("pollCreated", poll);
-  });
-
-  socket.on("teacherLogout", () => {
-    currentPoll = null;
-    pollStartTime = null;
-    votes = {};
-    io.emit("sessionEnded");
-  });
-
-  socket.on("endSession", () => {
-    currentPoll = null;
-    pollStartTime = null;
-    votes = {};
-    io.emit("sessionEnded");
   });
 
   socket.on("kickOut", (userToKick) => {
@@ -161,4 +132,3 @@ app.get("/polls/:teacherUsername", (req, res) => {
 server.listen(port, () => {
   console.log(`Server running on port ${port}...`);
 });
-  
