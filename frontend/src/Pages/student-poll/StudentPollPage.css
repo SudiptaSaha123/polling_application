@@ -1,0 +1,32 @@
+.progress-bar-bg{
+    background-color: #7565d9 
+}
+.option-border{
+    border-color: #7565d9 !important
+}
+.question{
+    background: linear-gradient(90deg, #343434 0%, #6E6E6E 100%);
+
+}
+
+  
+  .spinner{
+    color: #500ECE;
+    }
+
+.ask-question {
+  background: linear-gradient(99.18deg, #8F64E1 -46.89%, #1D68BD 223.45%);
+  color: #ffffff !important;
+}
+
+.list-group-item {
+  transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: rgba(117, 101, 217, 0.05);
+}
+
+.list-group-item.option-border {
+  background-color: rgba(117, 101, 217, 0.1);
+}

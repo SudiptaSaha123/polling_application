@@ -1,0 +1,11 @@
+.role-btn {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: white;
+  border: 2px solid #ddd;
+  cursor: pointer;
+}
+
+.role-btn.active {
+  border-color: #6f42c1;
+}

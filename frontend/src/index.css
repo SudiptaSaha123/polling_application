@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your custom styles below */
+
+@layer base {
+  :root {
+    font-family: 'Sora', sans-serif !important;
+  }
+  
+  body {
+    font-family: 'Sora', sans-serif !important;
+  }
+  
+  * {
+    font-family: inherit;
+  }
+}
