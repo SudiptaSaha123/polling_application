@@ -154,7 +154,10 @@ const StudentPollPage = () => {
                     Intervue Poll
                   </div>
                 </div>
-                <div className="spinner-border text-center spinner mt-[13px] mb-[35px]" role="status">
+                <div
+                  className="spinner-border text-center spinner mt-[13px] mb-[35px]"
+                  role="status"
+                >
                   <span className="visually-hidden">Loading...</span>
                 </div>
                 <h3 className="font-[500] text-[33px] text-center">
@@ -169,7 +172,12 @@ const StudentPollPage = () => {
               <div className="flex items-center gap-[40px] mb-[17px]">
                 <h2 className="text-[22px] font-[600] mt-[6px]">Question</h2>
                 <div className="flex items-center gap-2 justify-center">
-                  <img src={stopwatch} width="15px" height="auto" alt="Stopwatch" />
+                  <img
+                    src={stopwatch}
+                    width="15px"
+                    height="auto"
+                    alt="Stopwatch"
+                  />
                   <span className="text-[16px] font-[500] text-[#FF4B4B]">
                     {`00:${String(timeLeft).padStart(2, "0")}`}
                   </span>
@@ -183,11 +191,17 @@ const StudentPollPage = () => {
 
                 <div className="mt-4">
                   {pollOptions.map((option, index) => {
-                    const percentage = calculatePercentage(votes[option.text] || 0);
-                    const isSelected = !submitted && selectedOption === option.text;
+                    const percentage = calculatePercentage(
+                      votes[option.text] || 0
+                    );
+                    const isSelected =
+                      !submitted && selectedOption === option.text;
 
                     return (
-                      <div key={option.id} className="option-item mb-3 px-[18px]">
+                      <div
+                        key={option.id}
+                        className="option-item mb-3 px-[18px]"
+                      >
                         <div
                           className={`relative rounded-[6px] overflow-hidden ${
                             isSelected
@@ -195,8 +209,13 @@ const StudentPollPage = () => {
                               : "border border-[#8F64E1]"
                           }`}
                           style={{
-                            cursor: submitted || timeLeft === 0 ? "not-allowed" : "pointer",
-                            boxShadow: isSelected ? "0 0 0 2px #8F64E1" : "none",
+                            cursor:
+                              submitted || timeLeft === 0
+                                ? "not-allowed"
+                                : "pointer",
+                            boxShadow: isSelected
+                              ? "0 0 0 2px #8F64E1"
+                              : "none",
                           }}
                           onClick={() => {
                             if (!submitted && timeLeft > 0) {
@@ -226,7 +245,10 @@ const StudentPollPage = () => {
                             <span
                               className="text-[16px] font-[500]"
                               style={{
-                                color: submitted && percentage > 10 ? "#fff" : "#000",
+                                color:
+                                  submitted && percentage > 10
+                                    ? "#fff"
+                                    : "#000",
                               }}
                             >
                               {option.text}

@@ -35,13 +35,17 @@ const Chat = ({ messages, newMessage, onMessageChange, onSendMessage }) => {
             return (
               <div
                 key={index}
-                className={`flex flex-col gap-0.5 ${isCurrentUser ? "items-end" : "items-start"}`}
+                className={`flex flex-col gap-0.5 ${
+                  isCurrentUser ? "items-end" : "items-start"
+                }`}
               >
                 <span className="text-[#4F0BD3] font-medium text-xs mb-[2px]">
                   {msg.user}
                 </span>
                 <span
-                  className={`text-left ${isCurrentUser ? "bg-[#4F0BD3]" : "bg-[#3A3A3B]"} max-w-[694px] rounded-[32px] rounded-tr-[1px] rounded-tl-[8px] rounded-b-[8px] py-[9px] pl-[9px] pr-[10.5px] text-white`}
+                  className={`text-left ${
+                    isCurrentUser ? "bg-[#4F0BD3]" : "bg-[#3A3A3B]"
+                  } max-w-[694px] rounded-[32px] rounded-tr-[1px] rounded-tl-[8px] rounded-b-[8px] py-[9px] pl-[9px] pr-[10.5px] text-white`}
                 >
                   {msg.text}
                 </span>

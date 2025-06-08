@@ -15,7 +15,7 @@ const PollHistoryPage = () => {
   const [polls, setPolls] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const getPolls = async () => {
       const username = sessionStorage.getItem("username");
@@ -43,11 +43,11 @@ const PollHistoryPage = () => {
     if (totalVotes === 0) return 0;
     return (count / totalVotes) * 100;
   };
-  
+
   const handleBack = () => {
     navigate("/teacher-home-page");
   };
-  
+
   let questionCount = 0;
 
   if (error) {
@@ -65,16 +65,18 @@ const PollHistoryPage = () => {
       <div className="flex justify-end mr-[30px] mt-[40px]">
         <button
           className="bg-[#8F64E1] w-[180px] h-[45px] appearance-none border-none outline-none text-[16px] font-[500] rounded-[34px] py-[10px] px-[20px] text-white flex items-center justify-center gap-[10px] cursor-pointer"
-          onClick={() => navigate('/teacher-home-page')}
+          onClick={() => navigate("/teacher-home-page")}
         >
           Back to Home
         </button>
       </div>
       <div className="mx-auto w-[727px] py-[70px]">
-        <h2 className="text-[40px] font-[400] mb-[40px]">View <span className="font-[600]">Poll History</span></h2>
+        <h2 className="text-[40px] font-[400] mb-[40px]">
+          View <span className="font-[600]">Poll History</span>
+        </h2>
 
         {polls.length > 0 ? (
-          polls.map((poll,index) => {
+          polls.map((poll, index) => {
             const totalVotes = poll.options.reduce(
               (sum, option) => sum + option.votes,
               0
@@ -82,7 +84,9 @@ const PollHistoryPage = () => {
 
             return (
               <div key={poll._id} className="mb-[30px]">
-                <div className="text-[19px] font-[600] mb-[16px]">Question {index+1}</div>
+                <div className="text-[19px] font-[600] mb-[16px]">
+                  Question {index + 1}
+                </div>
                 <div className="border border-[#AF8FF1] rounded-[10px] bg-white max-w-[727px] mx-auto">
                   <div className="p-3 rounded-b-0 rounded-t-[10px] text-white bg-[linear-gradient(90deg,_#343434_0%,_#6E6E6E_100%)] text-[17px] font-[600] mb-[30px]">
                     {poll.question}
@@ -90,9 +94,15 @@ const PollHistoryPage = () => {
 
                   <div className="mt-4">
                     {poll.options.map((option, index) => {
-                      const percentage = calculatePercentage(option.votes, totalVotes);
+                      const percentage = calculatePercentage(
+                        option.votes,
+                        totalVotes
+                      );
                       return (
-                        <div key={option._id} className="option-item mb-3 px-[18px]">
+                        <div
+                          key={option._id}
+                          className="option-item mb-3 px-[18px]"
+                        >
                           <div className="relative rounded-[6px] overflow-hidden">
                             <div className="progress h-[48px] bg-[#F5F5F5] rounded-[6px] m-0">
                               <div
@@ -113,7 +123,9 @@ const PollHistoryPage = () => {
                               </span>
                               <span
                                 className="text-[16px] font-[500]"
-                                style={{ color: percentage > 10 ? "#fff" : "#000" }}
+                                style={{
+                                  color: percentage > 10 ? "#fff" : "#000",
+                                }}
                               >
                                 {option.text}
                               </span>

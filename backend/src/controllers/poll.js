@@ -22,12 +22,12 @@ exports.voteOnOption = async (pollId, optionText) => {
 
 exports.getPolls = async (req, res) => {
   let { teacherUsername } = req.params;
-  
+
   // Verify that the username is a teacher username
   if (!teacherUsername || !teacherUsername.startsWith("teacher")) {
     return res.status(403).json({
       status: "error",
-      message: "Unauthorized: Only teachers can access poll history"
+      message: "Unauthorized: Only teachers can access poll history",
     });
   }
 

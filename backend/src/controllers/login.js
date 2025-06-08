@@ -5,7 +5,7 @@ exports.TeacherLogin = (req, res) => {
   let teacherUsername = `teacher${randomNumber}`;
   let newTeacher = new Teacher({ username: teacherUsername });
   newTeacher.save();
-  let username =newTeacher.username
+  let username = newTeacher.username;
   res.status(201).json({
     status: "success",
     username,

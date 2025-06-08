@@ -1,4 +1,3 @@
-
 input[type="radio"]:checked {
   background-color: #7565d9;
   border-color: #7565d9;
@@ -8,7 +7,6 @@ input[type="radio"]:checked {
   color: rgba(143, 100, 225, 1) !important;
   border: 1px solid #7565d9 !important;
 }
-.option-input{
+.option-input {
   background-color: rgba(242, 242, 242, 1) !important;
-
 }

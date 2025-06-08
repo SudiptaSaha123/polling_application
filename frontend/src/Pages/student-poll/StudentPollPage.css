@@ -1,21 +1,19 @@
-.progress-bar-bg{
-    background-color: #7565d9 
+.progress-bar-bg {
+  background-color: #7565d9;
 }
-.option-border{
-    border-color: #7565d9 !important
+.option-border {
+  border-color: #7565d9 !important;
 }
-.question{
-    background: linear-gradient(90deg, #343434 0%, #6E6E6E 100%);
+.question {
+  background: linear-gradient(90deg, #343434 0%, #6e6e6e 100%);
+}
 
+.spinner {
+  color: #500ece;
 }
-
-  
-  .spinner{
-    color: #500ECE;
-    }
 
 .ask-question {
-  background: linear-gradient(99.18deg, #8F64E1 -46.89%, #1D68BD 223.45%);
+  background: linear-gradient(99.18deg, #8f64e1 -46.89%, #1d68bd 223.45%);
   color: #ffffff !important;
 }
 

@@ -69,7 +69,9 @@ const TeacherPollPage = () => {
 
               <div className="mt-4">
                 {pollOptions.map((option, index) => {
-                  const percentage = calculatePercentage(votes[option.text] || 0);
+                  const percentage = calculatePercentage(
+                    votes[option.text] || 0
+                  );
                   return (
                     <div key={option.id} className="option-item mb-3 px-[18px]">
                       <div className="relative rounded-[6px] overflow-hidden">

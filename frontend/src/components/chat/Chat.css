@@ -21,7 +21,7 @@
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-  background: #7565D9;
+  background: #7565d9;
   border-radius: 3px;
 }
 
@@ -35,6 +35,6 @@
 }
 
 .participants-list::-webkit-scrollbar-thumb {
-  background: #7565D9;
+  background: #7565d9;
   border-radius: 3px;
 }

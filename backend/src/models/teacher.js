@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 
-
 const TeacherSchema = new mongoose.Schema({
-    username: String,
+  username: String,
 });
 
 const Teacher = mongoose.model("Teacher", TeacherSchema);
