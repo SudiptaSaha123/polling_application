@@ -57,13 +57,19 @@ const io = new Server(server, {
 
 let votes = {};
 let connectedUsers = {};
+let currentPoll = null;
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
+  if (currentPoll) {
+    socket.emit("pollCreated", currentPoll);
+  }
+
   socket.on("createPoll", async (pollData) => {
     votes = {};
     const poll = await createPoll(pollData);
+    currentPoll = poll;
     io.emit("pollCreated", poll);
   });
 
@@ -124,5 +130,5 @@ app.get("/polls/:teacherUsername", (req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`Server running on port ${port}...`);
+  console.log(Server running on port ${port}...);
 });
